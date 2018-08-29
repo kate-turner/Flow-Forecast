@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import StreamList from "./src/components/StreamList/StreamList";
+import StreamDetail from "./src/components/StreamDetail/StreamDetail";
 
 export default class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       streamsData: [],
+      selectedStream: null,
   }
 }
 
@@ -33,11 +35,28 @@ export default class App extends React.Component {
         return err
       }
   }
+
+  streamSelectedHandler = id => {
+    this.setState(prevState => {
+      return {
+        selectedStream: prevState.streamsData.find(stream => {
+          return stream.id === id;
+        })
+      };
+    });
+  }
   
   render() {
     return (
       <View style={styles.container}>
-      <StreamList streamsData={this.state.streamsData} />
+      
+      <StreamList 
+        streamsData={this.state.streamsData}
+        onStreamSelected={this.streamSelectedHandler}
+       />
+      <StreamDetail selectedStream={this.state.selectedStream} />
+      
+
       </View>
     );
   }
@@ -45,7 +64,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
